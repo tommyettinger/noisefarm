@@ -19,7 +19,8 @@ public class Generator extends ApplicationAdapter {
     @Override
     public void create() {
     	noise = new Noise(1, 2f, Noise.SIMPLEX_FRACTAL, 2);
-        renderEqualizedPNG();
+        renderPNG(512);
+//        renderEqualizedPNG(512);
         Gdx.app.exit();
     }
     
@@ -29,11 +30,10 @@ public class Generator extends ApplicationAdapter {
         Gdx.gl.glClear(Gdx.gl.GL_COLOR_BUFFER_BIT);
     }
 
-    public void renderPNG() {
+    public void renderPNG(int size) {
 		PixmapIO.PNG png = new PixmapIO.PNG();
 		png.setFlipY(false);
 		png.setCompression(7);
-		int size = 256;
 		
 		Pixmap map = new Pixmap(size, size, Pixmap.Format.RGB888);
 		ByteBuffer buf = map.getPixels();
@@ -74,11 +74,10 @@ public class Generator extends ApplicationAdapter {
 			}
 		}
 	}
-    public void renderEqualizedPNG() {
+    public void renderEqualizedPNG(int size) {
 		PixmapIO.PNG png = new PixmapIO.PNG();
 		png.setFlipY(false);
 		png.setCompression(7);
-		int size = 256;
 		
 		float[][] raw = new float[size][size];
 
