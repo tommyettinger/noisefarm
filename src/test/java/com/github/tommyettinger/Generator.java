@@ -31,37 +31,55 @@ public class Generator extends ApplicationAdapter {
     }
 
     public void renderPNG() {
-        PixmapIO.PNG png = new PixmapIO.PNG();
-        png.setFlipY(false);
-        png.setCompression(7);
-        String noiseType = "simplex", fractal = "fbm";
-        int octaves = 2, size = 512, seed = 1;
-        float frequency = 2f;
-        Pixmap map = new Pixmap(size, size, Pixmap.Format.RGB888);
+		PixmapIO.PNG png = new PixmapIO.PNG();
+		png.setFlipY(false);
+		png.setCompression(7);
+		int size = 256;
+
+		Pixmap map = new Pixmap(size, size, Pixmap.Format.RGB888);
 		ByteBuffer buf = map.getPixels();
-		for (int y = 0; y < size; y++) {
-			for (int x = 0; x < size; x++) {
-				byte b = (byte)((int)((noise.seamless2D(x, y, size, size, seed) + 1f) * 127.999));
-				buf.put(b);
-				buf.put(b);
-				buf.put(b);
+
+		String[] noiseTypes = {"value", "perlin", "simplex", "foam", "honey"};
+		int[] noiseTypeIndices = {Noise.VALUE_FRACTAL, Noise.PERLIN_FRACTAL, Noise.SIMPLEX_FRACTAL, Noise.FOAM_FRACTAL, Noise.HONEY_FRACTAL};
+		String[] fractals = {"fbm", "billow", "ridged"};
+		String noiseType, fractal;
+		for (int nti = 0; nti < noiseTypeIndices.length; nti++) {
+			noiseType = noiseTypes[nti];
+			noise.setNoiseType(noiseTypeIndices[nti]);
+			for (int fi = 0; fi < fractals.length; fi += 2) {
+				fractal = fractals[fi];
+				noise.setFractalType(fi);
+				for (int octaves = 1; octaves <= 3; octaves++) {
+					noise.setFractalOctaves(octaves);
+					for (int frequency = 1; frequency <= 8; frequency *= 2) {
+						noise.setFrequency(frequency);
+						for (int seed = 0; seed < 16; seed++) {
+							noise.setSeed(seed);
+							for (int y = 0; y < size; y++) {
+								for (int x = 0; x < size; x++) {
+									byte b = (byte)((int)((noise.seamless2D(x, y, size, size, seed) + 1f) * 127.999));
+									buf.put(b);
+									buf.put(b);
+									buf.put(b);
+								}
+							}
+							try {
+								png.write(Gdx.files.local(String.format("images/%6$dx%6$d/%s-%s-%d-octaves-%d-frequency_%02d.png", noiseType, fractal, octaves, frequency, seed, size)), map);
+							} catch (IOException e) {
+								Gdx.app.error("png", e.getMessage());
+							}
+							buf.rewind();
+						}
+					}
+				}
 			}
-		}
-		try {
-			png.write(Gdx.files.local("images/" + noiseType + "-" + fractal + "-" + octaves + "-octaves-" + frequency + "-frequency-" + size + "x" + size + "_" + seed + ".png"), map);
-		} catch (IOException e) {
-			Gdx.app.error("png", e.getMessage());
 		}
 	}
 	
 	public static void main(String[] args) {
-		createApplication();
+		new Lwjgl3Application(new Generator(), getDefaultConfiguration());
 	}
-
-	private static Lwjgl3Application createApplication() {
-		return new Lwjgl3Application(new StillImageDemo(), getDefaultConfiguration());
-	}
-
+	
 	private static Lwjgl3ApplicationConfiguration getDefaultConfiguration() {
 		Lwjgl3ApplicationConfiguration configuration = new Lwjgl3ApplicationConfiguration();
 		configuration.setTitle("Noisefarm Generator");
