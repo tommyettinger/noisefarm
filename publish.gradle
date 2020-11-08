@@ -1,0 +1,34 @@
+modifyPom {
+    project {
+        name 'noisefarm'
+        description 'A library of continuous noise textures.'
+        url 'https://github.com/tommyettinger/noisefarm'
+        inceptionYear '2020'
+
+        scm {
+            url 'https://github.com/tommyettinger/noisefarm'
+            connection 'scm:https://tommyettinger@github.com/tommyettinger/noisefarm.git'
+            developerConnection 'scm:git://github.com/tommyettinger/noisefarm.git'
+        }
+
+        licenses {
+            license {
+                name 'Creative Commons 0 License'
+                url 'https://creativecommons.org/publicdomain/zero/1.0/'
+                distribution 'repo'
+            }
+        }
+
+        developers {
+            developer {
+                id 'tommyettinger'
+                name 'Tommy Ettinger'
+                email 'tommy.ettinger@gmail.com'
+            }
+        }
+    }
+}
+
+nexusStaging {
+    packageGroup = 'com.github.tommyettinger'
+}
