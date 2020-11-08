@@ -64,7 +64,7 @@ public class Generator extends ApplicationAdapter {
 								}
 							}
 							try {
-								png.write(Gdx.files.local(String.format("images/%6$dx%6$d/%s-%s-%d-octaves-%d-frequency_%02d.png", noiseType, fractal, octaves, frequency, seed, size)), map);
+								png.write(Gdx.files.local(String.format("generated/%6$dx%6$d/%s/%s/%d-octaves-%d-frequency_%02d.png", noiseType, fractal, octaves, frequency, seed, size)), map);
 							} catch (IOException e) {
 								Gdx.app.error("png", e.getMessage());
 							}
