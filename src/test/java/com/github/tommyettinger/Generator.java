@@ -19,8 +19,8 @@ public class Generator extends ApplicationAdapter {
     @Override
     public void create() {
     	noise = new Noise(1, 2f, Noise.SIMPLEX_FRACTAL, 2);
-        renderPNG(512);
-//        renderEqualizedPNG(512);
+//        renderPNG(512);
+        renderEqualizedPNG(512);
         Gdx.app.exit();
     }
     
